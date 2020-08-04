@@ -1,0 +1,17 @@
+{
+  "name": "nodejs_run_ksql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "produce": "node produce.js",
+    "consume": "node consume.js",
+    "ksql": "cd sql_statement && node ."
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "kafka-node": "^5.0.0"
+  }
+}
