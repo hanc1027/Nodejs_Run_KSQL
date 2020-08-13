@@ -1,13 +1,21 @@
-let phone_data = {
-    phoneID: "PHONE01"
+
+function getRandom(min, max) {
+    return Math.floor(Math.random() * max) + min;
 }
+
+let locaiont_data = {
+    UUID: "id-"+Date.now(),
+    LONG: getRandom(100, 800),
+    LAT: getRandom(10, 600),
+}
+
 
 const kafka = require('kafka-node'),
     Producer = kafka.Producer,
     client = new kafka.KafkaClient({ kafkaHost: "localhost:9092" }),
     producer = new Producer(client),
     payloads = [
-        { topic: 'test_topic', messages: Buffer.from(JSON.stringify(phone_data)), partition: 0, key: phone_data.phoneID },
+        { topic: 'test_distance_stream', messages: Buffer.from(JSON.stringify(locaiont_data)), partition: 0, key: locaiont_data.UUID },
     ];
 
 producer.on('ready', function () {
