@@ -14,7 +14,7 @@ var options = {
     onRebalance: (isAlreadyMember, callback) => { callback(); } // or null
 };
 
-var consumerGroup = new ConsumerGroup(options, ['test_table']);
+var consumerGroup = new ConsumerGroup(options, ['test_topic']);
 
 consumerGroup.on('message', function (message) {
     console.log("Consume資料：", message);

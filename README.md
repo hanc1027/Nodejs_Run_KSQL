@@ -10,6 +10,9 @@
 npm install
 ```
 
+#### Kafka需先確定已啟動
+- 9092 port的Broker是啟動的狀態
+
 #### Produce 資料至Kafka
 ```bash
 npm run produce
