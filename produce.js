@@ -18,6 +18,8 @@ const kafka = require('kafka-node'),
         { topic: 'test_distance_stream', messages: Buffer.from(JSON.stringify(locaiont_data)), partition: 0, key: locaiont_data.UUID },
     ];
 
+console.log("請等待5秒，將開始Produce")
+
 producer.on('ready', function () {
     setInterval(() => {
         producer.send(payloads, function (err, data) {
