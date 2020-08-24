@@ -12,8 +12,8 @@ module.exports = {
     });
 
     rl.on('line', function (line) {
-      var reg = RegExp(/--*/);
-      if (line.match(reg) || line.length == 0) {
+      var reg = line.startsWith('--');
+      if (reg || line.length == 0) {
         // console.log(line)
       } else {
         SendSQL(line)
