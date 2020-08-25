@@ -4,9 +4,9 @@ var client = new kafka.KafkaClient();
 // import 自定義模組
 const run_ksql = require('./run_ksql')
 
-// createTopic("test2_topic") //
-run_ksql.getSQLStatement()
+run_ksql.getSQLStatement('./test.sql')
 
+// createTopic("test2_topic") // 創建Topic
 
 function createTopic(topic_name) {
 

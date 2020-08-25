@@ -1,10 +1,12 @@
+const fs = require('fs');
 const axios = require('axios')
 const readline = require('readline');
-const fs = require('fs');
+const Config = require('../config')
 
+let sqlStatements = ""
 module.exports = {
-  getSQLStatement() {
-    var file = 'mvp03.sql';
+  getSQLStatement(FILE_NAME) {
+    var file = FILE_NAME;
     var rl = readline.createInterface({
       input: fs.createReadStream(file),
       output: process.stdout,
@@ -16,8 +18,10 @@ module.exports = {
       if (reg || line.length == 0) {
         // console.log(line)
       } else {
-        SendSQL(line)
+        sqlStatements += line
       }
+    }).on("close", () => {
+        SendSQL(sqlStatements)
     });
   }
 }
@@ -31,27 +35,38 @@ function SendSQL(sqlStatement) {
       "ksql": sqlStatement
     }
 
-  axios.post('http://localhost:8088/ksql', ksql_statement, config)
+
+  axios.post(`http://${Config.ip_address}:8088/ksql`, ksql_statement, config)
     .then((res) => {
-      DeterminateType(res.data[0], res.data[0]['@type'])
+      res.data.forEach(value=>{
+        DeterminateType(value, value['@type'])
+      })
     })
     .catch((error) => {
-      console.log("使用者執行指令:",error.response.data.statementText)
+      console.log("錯誤時，使用者執行指令:", error.response.data.statementText)
       console.error("錯誤訊息：", error.response.data.message)
+      console.log("---------------------")
     })
 
 }
 
 function DeterminateType(res_data, type) {
-  console.log("使用者執行指令:",res_data.statementText)
-
+  console.log("使用者執行指令:", res_data.statementText)
   switch (type) {
     case "tables":
       console.log("存在的Tables有：", res_data.tables)
       break;
 
     case "queries":
-      console.log("執行中的queries有：", res_data.queries[0])
+      console.log(`執行中的queries有 ${res_data.queries.length}個\n<<<>>>`)
+      res_data.queries.forEach((value, index) => {
+        console.log(`第${index + 1}個：`)
+        console.log("執行中的queries：", value.queryString)
+        console.log("執行中的queries的ID：", value.id)
+        console.log("與之相相關聯：", value.sinks)
+        console.log("狀態：", value.state)
+        console.log("<<<>>>")
+      });
       break;
 
     case "kafka_topics":
